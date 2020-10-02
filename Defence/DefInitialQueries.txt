@@ -1,0 +1,63 @@
+/*Average Tackle Percent*/
+
+SELECT d.squad, ROUND(AVG(D.dribblers_tackle_perc),3) as Avg_Tack_Percent,
+	(SELECT ROUND(AVG(dribblers_tackle_perc),3) FROM defensive_actions WHERE NOT d.squad = "Manchester City" or NOT d.squad = "Liverpool") as League_Avg_Tack_Percent
+FROM defensive_actions d
+LEFT JOIN player_info P
+USING(player_id)
+WHERE d.squad = "Manchester City" OR d.squad = "Liverpool" AND p.player_position LIKE("DF%") 
+GROUP BY d.squad;
+
+## Total Successful Press (Gaining possession in less than 5 seconds
+SELECT d.squad,
+	   AVG(press_sucs),
+	   (SELECT AVG(press_sucs) FROM defensive_actions WHERE NOT d.squad = "Manchester City" OR NOT d.squad = "Liverpool") Avg_Successful_Press
+FROM defensive_actions d
+LEFT JOIN player_info p
+USING (player_id)
+WHERE d.squad = "Manchester City" or d.squad = "Liverpool"
+GROUP BY d.squad;
+
+
+### Press Success % - team gaining possession within 5 seconds
+SELECT 
+	d.squad, 
+    ROUND(AVG(passes_blocked),3) as ManAndLiv_Press_Success,
+    (SELECT ROUND(AVG(passes_blocked),3) FROM defensive_actions WHERE NOT d.squad = "Manchester City" OR NOT d.squad = "Liverpool") as League_Press_Suc_Perc
+FROM defensive_actions d
+LEFT JOIN player_info p
+USING(player_id)
+WHERE d.squad = "Manchester City" OR d.squad = "Liverpool" AND p.player_position LIKE ("DF")
+GROUP BY d.squad;
+
+SELECT * FROM player_info;
+SELECT 
+	d.squad, 
+    ROUND(AVG(total_blocks),3) as ManAndLiv_Shots_Blocked,
+    (SELECT ROUND(AVG(total_blocks),3) FROM defensive_actions WHERE NOT d.squad = "Manchester City" OR NOT d.squad = "Liverpool") as League_Shots_Blocked
+FROM defensive_actions d
+LEFT JOIN player_info p
+USING(player_id)
+WHERE d.squad = "Manchester City" OR d.squad = "Liverpool" AND p.player_position LIKE ("%DF%")
+GROUP BY d.squad;
+SELECT 
+	d.squad, 
+    ROUND(AVG(passes_blocked),3) as ManAndLiv_Press_Success,
+    (SELECT ROUND(AVG(passes_blocked),3) FROM defensive_actions WHERE NOT d.squad = "Manchester City" OR NOT d.squad = "Liverpool") as League_Press_Suc_Perc
+FROM defensive_actions d
+LEFT JOIN player_info p
+USING(player_id)
+WHERE d.squad = "Manchester City" OR d.squad = "Liverpool" AND p.player_position LIKE ("DF")
+GROUP BY d.squad;
+
+SELECT 
+	d.squad, 
+    ROUND(AVG(shots_blocked),3) as ShotsBlocked,
+    (SELECT ROUND(AVG(shots_blocked),3) FROM defensive_actions WHERE NOT d.squad = "Manchester City" OR NOT d.squad = "Liverpool") as League_Shots_blocked
+FROM defensive_actions d
+LEFT JOIN player_info p
+USING(player_id)
+WHERE d.squad = "Manchester City" OR d.squad = "Liverpool" AND p.player_position LIKE ("DF")
+GROUP BY d.squad;
+
+

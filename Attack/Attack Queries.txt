@@ -1,0 +1,26 @@
+SELECT s.squad,
+--  Caclulating the Average Goals Scored by Manchester City and Liverpool in comparison to other League teams. --
+   ROUND(AVG(goals_scored),3) as Avg_Goals_Scored,
+    (SELECT ROUND(AVG(goals_scored),3) FROM shooting WHERE NOT s.squad = "Manchester City" or NOT s.squad = "Liverpool") as Avg_League_Goals_Scored,
+
+--  Caclulating the Total Shots / 90 mins  by Manchester City and Liverpool in comparison to other League teams. --
+   ROUND(AVG(shot_total_per90),3) as Avg_shot_total_per90,
+    (SELECT ROUND(AVG(shot_total_per90),3) FROM shooting WHERE NOT s.squad = "Manchester City" or NOT s.squad = "Liverpool") as Avg_League_shot_total_per90,
+
+--  Caclulating the Shot on Target percentage of Manchester City and Liverpool in comparison to other League teams. --
+   ROUND(AVG(sot_perc),3) as Avg_sot_Perc,
+    (SELECT ROUND(AVG(sot_perc),3) FROM shooting WHERE NOT s.squad = "Manchester City" or NOT s.squad = "Liverpool") as Avg_League_SOT_Perc,
+   
+--  Caclulating the Penalty kick conversion percentage of Manchester City and Liverpool in comparison to other League teams. --
+   ROUND(AVG(penkicks_scored/penkicks_atmpt),3) as Avg_Penkicks,
+    (SELECT ROUND(AVG(penkicks_scored/penkicks_atmpt),3) FROM shooting WHERE NOT s.squad = "Manchester City" or NOT s.squad = "Liverpool") as Avg_League_Avg_Penkicks,
+
+--  Caclulating the Goal conversion per Shots on target of Manchester City and Liverpool in comparison to other League teams. --
+   ROUND(AVG(goals_persot),3) as Avg_Goalcoversion_PerSOT,
+	(SELECT ROUND(AVG(goals_persot),3) FROM shooting WHERE NOT s.squad = "Manchester City" or NOT s.squad = "Liverpool") as Avg_League_GoalConversions_PerSOT
+
+FROM shooting s
+LEFT JOIN player_info P
+USING(player_id)
+WHERE (s.squad = "Manchester City" OR s.squad = "Liverpool") AND p.player_position LIKE("%Fw%")
+GROUP BY squad;
